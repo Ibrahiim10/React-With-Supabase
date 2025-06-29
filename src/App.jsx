@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import Articles from './pages/Articles';
 import Article from './pages/Article';
 import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import SignUpPage from './pages/SignUpPage';
 import Footer from './components/Footer';
 import Header from './components/Header';
 
@@ -23,7 +23,7 @@ const App = () => {
           {/* unauthenticated routes (redirect home if login) */}
 
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signup" element={<SignUpPage />} />
         </Routes>
       </main>
       <footer>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router';
+import { signUpUser } from '../lib/auth';
 
-const SignUp = () => {
+const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +11,29 @@ const SignUp = () => {
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // handle submit
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      await signUpUser(email, password, username);
+      setSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setError(error.message || 'Failed to create account. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-md w-full">
@@ -23,7 +47,12 @@ const SignUp = () => {
 
         {/* form info */}
         <div className="bg-white rounded-lg shadow-md p-8">
-          <form>
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm ">
+              {error}
+            </div>
+          )}
+          <form onSubmit={handleSubmit}>
             <div className="mb-6">
               <label
                 className="block text-gray-700 text-sm font-semibold mb-2 "
@@ -104,7 +133,7 @@ const SignUp = () => {
 
             <button
               type="submit"
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition duration-200 disabled:cursor-not-allowed"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition duration-200 disabled:cursor-not-allowed disabled:bg-orange-500"
               disabled={isLoading}
             >
               {isLoading ? 'Creating Account...' : 'Create Account'}
@@ -128,4 +157,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUpPage;
