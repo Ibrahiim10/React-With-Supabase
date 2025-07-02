@@ -8,7 +8,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const avatarUrl = null;
+  const avatar_url = null;
   // 'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D';
 
   return (
@@ -73,9 +73,9 @@ const Header = () => {
                   >
                     {
                       /* Profile Avatar */
-                      avatarUrl ? (
+                      avatar_url ? (
                         <img
-                          src={avatarUrl}
+                          src={avatar_url}
                           alt="Avatar"
                           className="h-8 w-8 rounded-full"
                         />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { signInUser } from '../lib/auth';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -7,6 +8,21 @@ const SignIn = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await signInUser(email, password);
+      navigate('/');
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -19,7 +35,12 @@ const SignIn = () => {
 
         {/* form info */}
         <div className="bg-white rounded-lg shadow-md p-8">
-          <form>
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+          <form onSubmit={handleSubmit}>
             <div className="mb-6">
               <label
                 className="block text-gray-700 text-sm font-semibold mb-2 "

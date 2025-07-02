@@ -24,7 +24,7 @@ const { data: profileData, error: profileError } = await supabase.from('users')
 .insert({
   id: data.user.id,
   username: displayName,
-  avatarUrl: null
+  avatar_url: null
 })
 
 .select()
@@ -89,7 +89,7 @@ export async function getUserProfile(userId) {
     .insert({
       id: userId,
       username: defaultUsername,
-      avatarUrl: null
+      avatar_url: null
     })
     .select()
     .single()
