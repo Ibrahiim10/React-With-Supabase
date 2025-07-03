@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getUserProfile, onAuthChange } from '../lib/auth';
+import { getUserProfile, onAuthChange, signOut } from '../lib/auth';
 
 const AuthContext = createContext(null);
 
@@ -9,36 +9,39 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const cleanUp = onAuthChange((user) => {
+    const cleanUp = onAuthChange(async (user) => {
       setUser(user);
 
       if (user) {
-        (async () => {
-          try {
-            const userProfile = await getUserProfile(user.id);
-            setProfile(userProfile);
-          } catch (error) {
-            console.error('Error fetching user profile', error);
-          } finally {
-            setIsLoading(false);
-          }
-        })();
+        try {
+          const userProfile = await getUserProfile(user.id);
+          setProfile(userProfile);
+        } catch (error) {
+          console.error('Error fetching user profile: ', error);
+        }
       } else {
         setProfile(null);
-        setIsLoading(false);
       }
+      setIsLoading(false);
     });
 
-    return () => {
-      if (typeof cleanUp === 'function') cleanUp();
-    };
+    return cleanUp;
   }, []);
+
+  const logout = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   const value = {
     user,
     profile,
     isLoading,
     isLoggedIn: !!user,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -48,7 +51,7 @@ export function useAuth() {
   const context = useContext(AuthContext);
 
   if (context === null) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth must be used within and AuthProvider');
   }
 
   return context;

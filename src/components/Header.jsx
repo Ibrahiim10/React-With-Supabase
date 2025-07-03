@@ -9,8 +9,8 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const { isLoggedIn, profile } = useAuth();
-  console.log('user profile', profile);
+  const { isLoggedIn, profile, logout } = useAuth();
+  // console.log('user profile', profile);
 
   const avatar_url = null;
   // 'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D';
@@ -66,9 +66,7 @@ const Header = () => {
             {isLoggedIn ? (
               <>
                 <div className="text-sm text-gray-700">
-                  <span>
-                    Hello , {profile?.session?.user.email.split('@')[0]}
-                  </span>
+                  <span>Hello , {profile?.username}</span>
                 </div>
 
                 <div className="relative">
@@ -105,9 +103,12 @@ const Header = () => {
                       <Link className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Manage Articles
                       </Link>
-                      <Link className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <button
+                        onClick={logout}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
                         Signout
-                      </Link>
+                      </button>
                     </div>
                   )}
                 </div>
@@ -190,6 +191,9 @@ const Header = () => {
               </Link>
               <button
                 // onClick={logout}
+                onClick={() => {
+                  logout();
+                }}
                 className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
               >
                 Sign Out

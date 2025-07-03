@@ -7,11 +7,11 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  // const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const authInfo = useAuth();
-  console.log({ authInfo });
+  const authIfo = useAuth();
+  console.log({ authIfo });
 
   const navigate = useNavigate();
 
@@ -24,7 +24,12 @@ const SignIn = () => {
       await signInUser(email, password);
       navigate('/');
     } catch (error) {
+      setError(
+        error.message || 'Failed to sign in. Please check your credentials.'
+      );
       console.log('error', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
