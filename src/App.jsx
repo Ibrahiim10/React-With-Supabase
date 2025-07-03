@@ -7,30 +7,33 @@ import SignIn from './pages/SignIn';
 import SignUpPage from './pages/SignUpPage';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import { AuthProvider } from './context/AuthContext';
 
 const App = () => {
   return (
-    <div>
-      {/* header */}
-      <Header />
-      <main>
-        {/* routes */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/articles" element={<Articles />} />
-          <Route path="/article/:id" element={<Article />} />
+    <AuthProvider>
+      <div>
+        {/* header */}
+        <Header />
+        <main>
+          {/* routes */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/articles" element={<Articles />} />
+            <Route path="/article/:id" element={<Article />} />
 
-          {/* unauthenticated routes (redirect home if login) */}
+            {/* unauthenticated routes (redirect home if login) */}
 
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUpPage />} />
-        </Routes>
-      </main>
-      <footer>
-        {/* footer content */}
-        <Footer />
-      </footer>
-    </div>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUpPage />} />
+          </Routes>
+        </main>
+        <footer>
+          {/* footer content */}
+          <Footer />
+        </footer>
+      </div>
+    </AuthProvider>
   );
 };
 

@@ -115,3 +115,13 @@ export async function getUserProfile(userId) {
 
   
 }
+
+// auth change
+export async function onAuthChange(callback) {
+
+  const { data } = supabase.auth.onAuthStateChange((event, session) => {
+    callback(session?.user || null, event)
+  })
+
+  return() => data.subscription.unsubscribe();
+}

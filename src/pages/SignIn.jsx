@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { signInUser } from '../lib/auth';
+import { useAuth } from '../context/AuthContext';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -8,6 +9,9 @@ const SignIn = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const authInfo = useAuth();
+  console.log({ authInfo });
 
   const navigate = useNavigate();
 

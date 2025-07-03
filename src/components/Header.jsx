@@ -29,7 +29,7 @@ const Header = () => {
             {/* navigation links */}
             <nav className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
-                to="/home"
+                to="/"
                 className="inline-flex items-center px-1 pt-1 border-b-2 border-orange-500 text-sm font-medium text-gray-500"
               >
                 Home
