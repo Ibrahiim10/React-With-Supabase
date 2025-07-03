@@ -38,6 +38,7 @@ export function AuthProvider({ children }) {
     user,
     profile,
     isLoading,
+    isLoggedIn: !!user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

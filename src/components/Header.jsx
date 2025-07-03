@@ -3,11 +3,15 @@ import { Link } from 'react-router';
 import { FaUser } from 'react-icons/fa';
 import { CiMenuBurger } from 'react-icons/ci';
 import { IoMdClose } from 'react-icons/io';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const { isLoggedIn, profile } = useAuth();
+  console.log('user profile', profile);
+
   const avatar_url = null;
   // 'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D';
 
@@ -62,7 +66,9 @@ const Header = () => {
             {isLoggedIn ? (
               <>
                 <div className="text-sm text-gray-700">
-                  <span>Hello, Ibra</span>
+                  <span>
+                    Hello , {profile?.session?.user.email.split('@')[0]}
+                  </span>
                 </div>
 
                 <div className="relative">
