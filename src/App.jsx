@@ -13,6 +13,7 @@ import ArticleEditorPage from './pages/ArticleEditorPage';
 import ManageArticlePage from './pages/ManageArticlePage';
 import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   return (
@@ -86,6 +87,7 @@ const App = () => {
           <Footer />
         </footer>
       </div>
+      <Toaster />
     </AuthProvider>
   );
 };

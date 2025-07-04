@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FiCamera, FiMail } from 'react-icons/fi';
 import { FiUser } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
@@ -10,6 +11,21 @@ const ProfilePage = () => {
   const [avatarUrl, setAvatarUrl] = useState('');
 
   const { user } = useAuth();
+
+  const handleAvatarChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Hey! File size is too large', { position: 'top-right' });
+        return;
+      }
+
+      setAvatar(file);
+
+      const previewURL = URL.createObjectURL(file);
+      setAvatarUrl(previewURL);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py12 px-4 sm:px-6 lg:px-8">
@@ -43,7 +59,7 @@ const ProfilePage = () => {
                   id="avatar-upload"
                   className="hidden"
                   accept="image/*"
-                  // onChange={handleAvatarChange}
+                  onChange={handleAvatarChange}
                 />
               </div>
 
