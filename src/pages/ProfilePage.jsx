@@ -4,6 +4,7 @@ import { FiUser } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { getUserProfile } from '../lib/auth';
+import supabase from '../lib/supabase';
 
 const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,61 @@ const ProfilePage = () => {
       setAvatarUrl(previewURL);
     }
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      let updates = { username };
+
+      // if file selected upload first
+      if (avatar) {
+        const fileExt = avatar.name.split('.').pop();
+        const fileName = `${user.id}-${Math.random()
+          .toString(36)
+          .substring(2)}`;
+        const filePath = `avatars/${fileName}.${fileExt}`;
+        const { error, uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, avatar);
+
+        if (uploadError) throw uploadError;
+
+        // get the uploaded file url
+        const { data } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+        updates = { ...updates, avatar_url: data.publicUrl };
+
+        setAvatarUrl(data.publicUrl);
+      }
+
+      console.log('updates to be applied');
+
+      const { error, data } = await supabase
+
+        .from('users')
+        .update(updates)
+        .eq('id', user.id)
+        .select('username, avatar_url')
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setAvatarUrl(data.avatar_url);
+        setUsername(data.username);
+      }
+
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      toast.error(error.message || 'Error updating profile', {
+        position: 'top-right',
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -94,7 +150,7 @@ const ProfilePage = () => {
           </div>
 
           {/* profile form */}
-          <form className="p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
             <div className="space-y-6">
               {/* username */}
               <div>

@@ -44,18 +44,22 @@ const Header = () => {
               >
                 Articles
               </Link>
-              <Link
-                to="/write"
-                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500"
-              >
-                Write
-              </Link>
-              <Link
-                to="/my-articles"
-                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500"
-              >
-                My Articles
-              </Link>
+              {isLoggedIn && (
+                <>
+                  <Link
+                    to="/write"
+                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500"
+                  >
+                    Write
+                  </Link>
+                  <Link
+                    to="/my-articles"
+                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500"
+                  >
+                    My Articles
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
 
