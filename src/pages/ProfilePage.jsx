@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiCamera, FiMail } from 'react-icons/fi';
 import { FiUser } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import { getUserProfile } from '../lib/auth';
 
 const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,27 @@ const ProfilePage = () => {
   const [avatarUrl, setAvatarUrl] = useState('');
 
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile();
+    }
+  }, [user]);
+
+  const fetchUserProfile = async (e) => {
+    try {
+      setLoading(true);
+      const { username, avatar_url } = await getUserProfile(user.id);
+      if (username) {
+        setUsername(username);
+        setAvatarUrl(avatar_url);
+      }
+    } catch (error) {
+      console.error('Error fetching user profile', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAvatarChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -26,7 +48,6 @@ const ProfilePage = () => {
       setAvatarUrl(previewURL);
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 py12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
