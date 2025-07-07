@@ -1,6 +1,25 @@
 import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FiInfo, FiSave, FiX } from 'react-icons/fi';
+import { FiInfo, FiSave, FiTag, FiX } from 'react-icons/fi';
+
+// Available tags - In a real app, fetch from Supabase
+const AVAILABLE_TAGS = [
+  'React',
+  'JavaScript',
+  'CSS',
+  'Tailwind',
+  'Web Development',
+  'Backend',
+  'Frontend',
+  'UI Design',
+  'Performance',
+  'Supabase',
+  'Real-time',
+  'API',
+  'Testing',
+  'TypeScript',
+  'Future Tech',
+];
 
 const ArticleEditorPage = () => {
   const isEditMode = false;
@@ -10,7 +29,7 @@ const ArticleEditorPage = () => {
   const [content, setContent] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
-  const [isTagsMenuDrop, setIsTagsMenuDrop] = useState(false);
+  const [isTagsMenuOpen, setIsTagsMenuOpen] = useState(true);
   const [featuredImageUrl, setFeaturedImageUrl] = useState('');
   const [isPublished, setIsPublished] = useState(false);
   const [error, setError] = useState(null);
@@ -23,6 +42,11 @@ const ArticleEditorPage = () => {
   const fileInputRef = useRef(null);
   const editorRef = useRef(null);
 
+  const toggleTag = (tag) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* header buttons */}
@@ -128,9 +152,96 @@ const ArticleEditorPage = () => {
             )}
           </div>
         </div>
+
+        {/* Display currently stored image */}
+
+        {featuredImageUrl && (
+          <div className="mt-2 mb-4">
+            <img
+              src="featuredImageUrl"
+              alt="featured image"
+              className="w-full max-h-64 object-cover rounded-md"
+            />
+            <div className="flex justify-between items-center mt-1">
+              <span className="text-xs text-gray-500 truncate max-w-[80%]">
+                {featuredImageUrl}
+              </span>
+
+              <button
+                type="button"
+                className="text-red-500 text-xs hover:text-red-700"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Display currently stored image */}
+      {/* tags selections */}
+      <div className="mb-6 relative">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Tags
+        </label>
+        <div className=" flex flex-wrap gap-2 mb-2">
+          {selectedTags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 cursor-pointer"
+              onClick={() => toggleTag(tag)}
+            >
+              {tag}
+              <button
+                type="button"
+                className="ml-1.5 inline-flex text-orange-400 hover:text-orange-600 focus:outline-none"
+              >
+                <span className="sr-only">Remove tag {tag}</span>
+                <svg
+                  className="h-2 w-2"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 8 8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeWidth="1.5"
+                    d="M1 1l6 6m0-6L1 7"
+                  />
+                </svg>
+              </button>
+            </span>
+          ))}
+        </div>
+
+        {/* add tags button */}
+        <button
+          type="button"
+          className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+          onClick={() => setIsTagsMenuOpen(!isTagsMenuOpen)}
+        >
+          <FiTag className="mr-1.5 h-4 w-4" />
+          Add Tags
+        </button>
+        {isTagsMenuOpen && (
+          <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+            <div className="grid grid-cols-2 gap-2 p-2">
+              {AVAILABLE_TAGS.map((tag) => (
+                <div
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`cursor-pointer px-3 py-2 rounded hover:bg-gray-100 ${
+                    selectedTags.includes(tag)
+                      ? 'bg-orange-50 text-orange-700'
+                      : ''
+                  }`}
+                >
+                  {tag}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
