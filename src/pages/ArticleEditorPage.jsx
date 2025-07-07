@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FiInfo, FiSave, FiTag, FiX } from 'react-icons/fi';
+import QuillEditor from '../components/QuillEditor';
 
 // Available tags - In a real app, fetch from Supabase
 const AVAILABLE_TAGS = [
@@ -47,6 +48,9 @@ const ArticleEditorPage = () => {
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     );
   };
+
+  // handleContentChange
+  const handleContentChange = () => {};
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* header buttons */}
@@ -241,6 +245,38 @@ const ArticleEditorPage = () => {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Quill React */}
+      {/* Content editor */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Content
+        </label>
+        <div className="border border-gray-300 rounded-md overflow-hidden">
+          <QuillEditor
+            ref={editorRef}
+            value={content}
+            onChange={handleContentChange}
+            placeholder={'Write your article content here...'}
+            height="500"
+          />
+        </div>
+      </div>
+      <div className="px-6 py-4 md:px-10 flex justify-end space-x-4">
+        <button
+          // onClick={() => handleSave(false)}
+          className="px-6 py-3 border border-gray-300 rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          {isEditMode ? 'Update as Draft' : 'Save as Draft'}
+        </button>
+
+        <button
+          // onClick={() => handleSave(true)}
+          className="px-6 py-3 border border-transparent rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          {isEditMode ? 'Update and Publish' : 'Save and Publish'}
+        </button>
       </div>
     </div>
   );
