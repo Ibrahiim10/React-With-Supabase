@@ -51,6 +51,32 @@ const ArticleEditorPage = () => {
 
   // handleContentChange
   const handleContentChange = () => {};
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file.');
+      e.target.value = ''; // Clear the input
+      setSelectedImage(null);
+      return;
+    }
+
+    // Check file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      toast.error(
+        `Image size (${
+          file.size / (1024 / 1024).toFixed(2)
+        } MB) exceeds the 5MB limit.`
+      );
+      e.target.value = ''; // Clear the input
+      setSelectedImage(null);
+      return;
+    }
+
+    setSelectedImage(file);
+    toast.success('Image selected successfully.');
+  };
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* header buttons */}
@@ -131,7 +157,7 @@ const ArticleEditorPage = () => {
               type="file"
               id="featured-image"
               accept="image/*"
-              // onChange={handleImageSelect}
+              onChange={handleImageSelect}
               ref={fileInputRef}
               className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
             />
