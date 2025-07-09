@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { supabase } from './supabaseClient';
+import supabase from './supabase.js';
 
 export const uploadImage = async (file, userId, bucket = 'featured-image') => {
 

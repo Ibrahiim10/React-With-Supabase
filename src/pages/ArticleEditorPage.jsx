@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FiInfo, FiSave, FiTag, FiX } from 'react-icons/fi';
 import QuillEditor from '../components/QuillEditor';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router';
+import { uploadImage } from '../lib/storage';
 
 // Available tags - In a real app, fetch from Supabase
 const AVAILABLE_TAGS = [
@@ -40,6 +43,9 @@ const ArticleEditorPage = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [imagePath, setImagePath] = useState(null);
 
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const fileInputRef = useRef(null);
   const editorRef = useRef(null);
 
@@ -76,6 +82,47 @@ const ArticleEditorPage = () => {
 
     setSelectedImage(file);
     toast.success('Image selected successfully.');
+  };
+
+  const handleUploadImage = async () => {
+    if (!selectedImage) {
+      toast.error('Please select an image to upload.');
+      return;
+    }
+
+    // check if the user is logged in
+    if (!user) {
+      toast.error('You must be logged in to upload an image.');
+      navigate('/signin');
+      return;
+    }
+
+    // start uploading
+    setIsUploading(true);
+    console.log('Starting image upload...', selectedImage);
+
+    try {
+      // upload image to Supabase storage
+      const { path, url } = await uploadImage(selectedImage, user.id);
+
+      console.log('Image uploaded successfully:', { path, url });
+      setFeaturedImageUrl(url);
+      setImagePath(path);
+
+      // clear the file input
+      setSelectedImage(null);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      toast.error('Image upload failed. Please try again.');
+      throw error;
+    } finally {
+      setIsUploading(false);
+    }
   };
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
